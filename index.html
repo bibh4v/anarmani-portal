@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anarmani Distribution Centre - Consumer Application Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16v-2"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <h1 id="login-title">Anarmani Distribution Centre</h1>
+        <p class="login-subtitle">Consumer Application Portal</p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+          <button type="button" role="tab" id="tab-login" class="auth-tab active" aria-selected="true" aria-controls="panel-login">Sign In</button>
+          <button type="button" role="tab" id="tab-signup" class="auth-tab" aria-selected="false" aria-controls="panel-signup">Sign Up</button>
+        </div>
+
+        <div role="tabpanel" id="panel-login" class="auth-panel active">
+          <div class="field">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" autocomplete="email" required placeholder="you@office.gov.np" />
+          </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="login-submit">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-loader" hidden><span class="spinner"></span> Signing in...</span>
+          </button>
+          <p class="form-status" id="login-status" role="status" aria-live="polite"></p>
+        </div>
+
+        <div role="tabpanel" id="panel-signup" class="auth-panel" hidden>
+          <div class="field">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" name="full_name" autocomplete="name" required placeholder="Your full name" />
+          </div>
+          <div class="field">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" name="email" autocomplete="email" required placeholder="you@office.gov.np" />
+          </div>
+          <div class="field">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" />
+          </div>
+          <div class="field">
+            <label for="signup-confirm">Confirm Password</label>
+            <input type="password" id="signup-confirm" name="confirm" autocomplete="new-password" required placeholder="Confirm password" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="signup-submit">
+            <span class="btn-text">Create Account</span>
+            <span class="btn-loader" hidden><span class="spinner"></span> Creating...</span>
+          </button>
+          <p class="form-status" id="signup-status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <p class="login-note">Authorized personnel only. Contact admin for access.</p>
+    </div>
+  </div>
+
+  <!-- Main App (hidden until authenticated) -->
+  <div id="app-container" class="app-container" hidden>
+    <!-- Header -->
+    <header class="app-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16v-2"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div>
+            <h1>Anarmani Distribution Centre</h1>
+            <p class="subtitle">Consumer Application Portal</p>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="user-menu">
+            <button type="button" class="user-avatar" id="user-avatar" aria-label="User menu" aria-expanded="false" aria-haspopup="true">
+              <span class="avatar-text" id="avatar-text">U</span>
+            </button>
+            <div class="user-dropdown" id="user-dropdown" role="menu" hidden>
+              <div class="dropdown-header">
+                <span class="dropdown-name" id="dropdown-name"></span>
+                <span class="dropdown-email" id="dropdown-email"></span>
+              </div>
+              <button type="button" class="dropdown-item" id="btn-manage-inspectors" role="menuitem">
+                <span aria-hidden="true">👥</span> Manage Inspectors
+              </button>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item danger" id="btn-logout" role="menuitem">
+                <span aria-hidden="true">🚪</span> Sign Out
+              </button>
+            </div>
+          </div>
+          <div class="header-stats">
+            <div class="stat-chip" id="total-apps">0 Applications</div>
+            <div class="stat-chip pending" id="pending-count">0 Pending</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Filters Bar -->
+      <section class="filters-bar card">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label for="filter-search" class="visually-hidden">Search applications</label>
+            <div class="search-wrapper">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input type="search" id="filter-search" placeholder="Search by name, darta #, phone, office..." autocomplete="off" />
+              <button type="button" id="clear-search" class="clear-btn" aria-label="Clear search" hidden>&times;</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-fiscal-year" class="visually-hidden">Fiscal Year</label>
+            <select id="filter-fiscal-year">
+              <option value="">All Fiscal Years</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-office" class="visually-hidden">Office</label>
+            <select id="filter-office">
+              <option value="">All Offices</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="filter-status" class="visually-hidden">Progress Status</label>
+            <select id="filter-status">
+              <option value="">All Statuses</option>
+            </select>
+          </div>
+
+          <div class="filter-actions">
+            <button type="button" id="btn-new-application" class="btn btn-primary">
+              <span aria-hidden="true">➕</span> New Application
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Application Form Modal -->
+      <dialog id="app-modal" class="modal">
+        <form id="app-form" method="dialog">
+          <div class="modal-header">
+            <h2 id="modal-title">New Application</h2>
+            <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+          </div>
+
+          <input type="hidden" name="appId" id="app-id" />
+          <input type="hidden" name="existingScannedPdf" id="existing-scanned-pdf" />
+          <input type="hidden" name="existingInspectionPdf" id="existing-inspection-pdf" />
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="fiscal-year">Fiscal Year <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="fiscal-year" name="fiscalYear" placeholder="e.g. 2080/81" required autocomplete="off" />
+            </div>
+
+            <div class="field">
+              <label for="office-name">Office / Sub-centre <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="office-name" name="officeName" placeholder="Office name" required autocomplete="off" list="office-suggestions" />
+              <datalist id="office-suggestions"></datalist>
+            </div>
+
+            <div class="field">
+              <label for="applicant-name">Applicant Name <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="applicant-name" name="applicantName" placeholder="Full name" required autocomplete="name" />
+            </div>
+
+            <div class="field">
+              <label for="applicant-phone">Applicant Phone <span class="required" aria-hidden="true">*</span></label>
+              <input type="tel" id="applicant-phone" name="applicantPhone" placeholder="e.g. 98XXXXXXXX" required autocomplete="tel" />
+            </div>
+
+            <div class="field">
+              <label for="darta-number">Darta Number <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="darta-number" name="dartaNumber" placeholder="Darta registration number" required autocomplete="off" />
+            </div>
+
+            <div class="field full-width">
+              <label for="scanned-pdf">Scanned Document (PDF) <span class="required" aria-hidden="true">*</span></label>
+              <div class="file-upload" id="scanned-upload">
+                <input type="file" id="scanned-pdf" name="scannedPdf" accept="application/pdf" required />
+                <div class="file-upload-label">
+                  <span class="file-icon" aria-hidden="true">📄</span>
+                  <span class="file-text">Click or drag PDF here</span>
+                  <span class="file-hint">Max 10MB</span>
+                </div>
+                <div class="file-preview" id="scanned-preview" hidden>
+                  <span class="preview-name"></span>
+                  <button type="button" class="preview-remove" aria-label="Remove file">&times;</button>
+                </div>
+              </div>
+              <p class="field-error" id="scanned-error" hidden></p>
+            </div>
+
+            <div class="field full-width">
+              <label for="inspection-pdf">Site Inspection Report (PDF)</label>
+              <div class="file-upload" id="inspection-upload">
+                <input type="file" id="inspection-pdf" name="inspectionPdf" accept="application/pdf" />
+                <div class="file-upload-label">
+                  <span class="file-icon" aria-hidden="true">📋</span>
+                  <span class="file-text">Click or drag PDF here</span>
+                  <span class="file-hint">Max 10MB</span>
+                </div>
+                <div class="file-preview" id="inspection-preview" hidden>
+                  <span class="preview-name"></span>
+                  <button type="button" class="preview-remove" aria-label="Remove file">&times;</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="inspection-assigned-to">Site Inspection Assigned To</label>
+              <select id="inspection-assigned-to" name="inspectionAssignedTo">
+                <option value="">— Select Inspector —</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="progress-status">Progress Status <span class="required" aria-hidden="true">*</span></label>
+              <select id="progress-status" name="progressStatus" required>
+                <option value="Pending">Pending</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Site Inspection Pending">Site Inspection Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="On Hold">On Hold</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="upload-progress" id="upload-progress" hidden>
+            <div class="upload-progress-bar">
+              <div class="upload-progress-fill" id="upload-progress-fill"></div>
+            </div>
+            <span id="upload-progress-text">Uploading PDFs… 0%</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submit-btn">
+              <span class="btn-text">Save Application</span>
+              <span class="btn-loader" hidden><span class="spinner"></span> Saving...</span>
+            </button>
+          </div>
+
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </dialog>
+
+      <!-- Inspectors Management Modal -->
+      <dialog id="inspectors-modal" class="modal">
+        <form id="inspectors-form" method="dialog">
+          <div class="modal-header">
+            <h2>Manage Inspectors</h2>
+            <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+          </div>
+
+          <div class="inspectors-toolbar">
+            <button type="button" class="btn btn-primary" id="btn-new-inspector">
+              <span aria-hidden="true">➕</span> Add Inspector
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="apps-table" role="grid">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inspectors-tbody">
+                <!-- rows rendered by app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary modal-cancel">Close</button>
+          </div>
+        </form>
+      </dialog>
+
+      <!-- Inspector Form Modal (nested in inspectors modal) -->
+      <dialog id="inspector-modal" class="modal">
+        <form id="inspector-form" method="dialog">
+          <div class="modal-header">
+            <h2 id="inspector-modal-title">Add Inspector</h2>
+            <button type="button" class="modal-close" aria-label="Close modal">&times;</button>
+          </div>
+
+          <input type="hidden" name="inspectorId" id="inspector-id" />
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="inspector-name">Inspector Name <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="inspector-name" name="name" placeholder="Full name" required autocomplete="name" />
+            </div>
+
+            <div class="field">
+              <label for="inspector-email">Email</label>
+              <input type="email" id="inspector-email" name="email" placeholder="inspector@office.gov.np" autocomplete="email" />
+            </div>
+
+            <div class="field">
+              <label for="inspector-phone">Phone</label>
+              <input type="tel" id="inspector-phone" name="phone" placeholder="e.g. 98XXXXXXXX" autocomplete="tel" />
+            </div>
+
+            <div class="field full-width">
+              <label class="checkbox-label">
+                <input type="checkbox" id="inspector-active" name="isActive" checked />
+                <span class="checkbox-text">Active (available for assignment)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="inspector-submit-btn">
+              <span class="btn-text">Save Inspector</span>
+              <span class="btn-loader" hidden><span class="spinner"></span> Saving...</span>
+            </button>
+          </div>
+
+          <p class="form-status" id="inspector-form-status" role="status" aria-live="polite"></p>
+        </form>
+      </dialog>
+
+      <!-- Applications Table -->
+      <section class="card table-section">
+        <div class="table-toolbar">
+          <h2 class="card-title">Applications</h2>
+          <div class="table-info" id="table-info">Loading...</div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="apps-table" role="grid">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Fiscal Year</th>
+                <th scope="col">Office</th>
+                <th scope="col">Applicant Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Darta Number</th>
+                <th scope="col">Scanned Doc</th>
+                <th scope="col">Inspection</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Status</th>
+                <th scope="col">Registered</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="apps-tbody">
+              <!-- rows rendered by app.js -->
+            </tbody>
+          </table>
+
+          <div id="empty-state" class="empty-state" hidden>
+            <div class="empty-icon" aria-hidden="true">📋</div>
+            <p>No applications found</p>
+            <span>Click "New Application" to add your first record</span>
+          </div>
+
+          <div id="no-results" class="empty-state" hidden>
+            <div class="empty-icon" aria-hidden="true">🔍</div>
+            <p>No matching applications</p>
+            <span>Try adjusting your search or filters</span>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav class="pagination" id="pagination" hidden aria-label="Pagination">
+          <button type="button" class="btn btn-sm" id="prev-page" aria-label="Previous page">&laquo; Prev</button>
+          <span class="page-info" id="page-info">Page 1 of 1</span>
+          <button type="button" class="btn btn-sm" id="next-page" aria-label="Next page">Next &raquo;</button>
+        </nav>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="container">
+        <p>Anarmani Distribution Centre &mdash; Consumer Application Portal</p>
+        <p class="footer-note">Data stored in Supabase (Postgres + Storage)</p>
+      </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
