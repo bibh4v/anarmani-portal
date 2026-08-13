@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.local
+
+# Vercel CLI output
+.vercel/
+
+# Local-only artifacts (no longer used in the cloud version)
+portal.db
+uploads/
+
+# Logs
+*.log
+npm-debug.log*

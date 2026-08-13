@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.js": {
+      "runtime": "@vercel/node@3.0.5",
+      "maxDuration": 30,
+      "includeFiles": "public/**"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index.js" }
+  ]
+}
