@@ -1,8 +1,8 @@
 {
   "name": "anarmani-consumer-portal",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Anarmani Distribution Centre - Consumer Application Portal (Vercel + Supabase)",
+  "description": "Anarmani Distribution Centre - Consumer Application Portal with Auth (Vercel + Supabase)",
   "main": "api/index.js",
   "scripts": {
     "start": "node server.js",

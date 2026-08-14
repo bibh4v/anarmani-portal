@@ -1,0 +1,5 @@
+=====================================================
+  Anarmani Distribution Centre - Consumer Portal
+  Local dev server: http://localhost:3001
+  Connected to cloud Supabase (Postgres + Storage)
+=====================================================
